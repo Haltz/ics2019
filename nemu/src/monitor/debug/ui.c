@@ -69,6 +69,8 @@ static int cmd_scanm(char *args) {
 }
 
 static int cmd_expr(char *args) {
+	bool result;
+	printf("%d\n", expr(args, &result));
 	return 0;
 }
 
