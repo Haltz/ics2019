@@ -6,6 +6,8 @@
 #include <sys/types.h>
 #include <regex.h>
 
+#define TOKEN_LEN 200
+
 enum { TK_NOTYPE = 256,
        TK_EQ
 
@@ -50,7 +52,7 @@ void init_regex() {
 
 typedef struct token {
 	int type;
-	char str[32];
+	char str[TOKEN_LEN];
 } Token;
 
 static Token tokens[32] __attribute__((used)) = {};
@@ -102,8 +104,9 @@ uint32_t expr(char *e, bool *success) {
 		return 0;
 	}
 
+	int p = 0, q = nr_token - 1, v = 1;
 	/* TODO: Insert codes to evaluate the expression. */
-	TODO();
+	switch (tokens[p].type) {}
 
 	return 0;
 }
