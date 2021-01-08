@@ -8,12 +8,7 @@
 
 #define TOKEN_LEN 200
 
-enum { TK_NOTYPE = 256,
-       TK_EQ
-
-       /* TODO: Add more token types */
-
-};
+enum { TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_PLUS, TK_SUB, TK_MUL, TK_DIV, TK_LBR, TK_RBR, TK_HEX, TK_REG, TK_AND, TK_OR, TK_DEREF };
 
 static struct rule {
 	char *regex;
@@ -25,8 +20,18 @@ static struct rule {
    */
 
 	{ " +", TK_NOTYPE }, // spaces
-	{ "\\+", '+' }, // plus
-	{ "==", TK_EQ } // equal
+	{ "\\+", TK_PLUS }, // plus
+	{ "==", TK_EQ }, // equal
+	{ "-", TK_SUB }, // substract
+	{ "\\*", TK_MUL }, // multiply or derefrence
+	{ "/", TK_DIV }, // divide
+	{ "0[Xx][0-9a-fA-F]+", TK_HEX }, // hex (must before the TK_NUM)
+	{ "[0-9]+", TK_NUM }, // number(dec)
+	{ "\\(", TK_LBR }, // left bracket
+	{ "\\)", TK_RBR }, // right bracket
+	{ "\\$[a-zA-Z]+", TK_REG }, // register
+	{ "&&", TK_AND }, // AND
+	{ "\\|\\|", TK_OR } // OR
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
@@ -106,7 +111,7 @@ uint32_t expr(char *e, bool *success) {
 
 	int p = 0, q = nr_token - 1, v = 1;
 	/* TODO: Insert codes to evaluate the expression. */
-	switch (tokens[p].type) {}
+	switch (tokens[p].type) { return 0; }
 
 	return 0;
 }
