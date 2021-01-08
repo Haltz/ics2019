@@ -132,7 +132,10 @@ uint32_t expr(char *e, bool *success) {
 
 	int p = 0, q = nr_token - 1, v = 1;
 	/* TODO: Insert codes to evaluate the expression. */
-	switch (tokens[p].type) { return 0; }
+	switch (tokens[p].type) {
+	default:
+		return 0;
+	}
 
 	return 0;
 }
