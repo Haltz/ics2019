@@ -124,6 +124,29 @@ bool is_op(int ch) {
 	return ch == TK_PLUS || ch == TK_SUB || ch == TK_MUL || ch == TK_DIV || ch == TK_AND || ch == TK_OR || ch == TK_EQ || ch == TK_DEREF;
 }
 
+/* return the priority of the oprator*/
+int op_prio(int op) {
+	int pri;
+	switch (op) {
+	case TK_OR:
+		return 0;
+	case TK_AND:
+		return 1;
+	case TK_EQ:
+		return 2;
+	case TK_PLUS:
+	case TK_SUB:
+		return 3;
+	case TK_MUL:
+	case TK_DIV:
+		return 4;
+	case TK_DEREF:
+		return 5;
+	default:
+		return (1 << 31) - 1;
+	}
+}
+
 uint32_t expr(char *e, bool *success) {
 	if (!make_token(e)) {
 		*success = false;
