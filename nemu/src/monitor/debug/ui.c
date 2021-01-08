@@ -37,6 +37,13 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_si(char *args) {
+	char *arg = strtok(NULL, " ");
+	if (arg == NULL)
+		return -1;
+
+	int steps;
+	sscanf(arg, "%d", &steps);
+	cpu_exec((uint64_t)steps);
 	return 0;
 }
 
