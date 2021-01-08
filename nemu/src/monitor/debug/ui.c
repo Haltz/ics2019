@@ -36,6 +36,8 @@ static int cmd_q(char *args) {
 	return -1;
 }
 
+static int cmd_help(char *args);
+
 static int cmd_si(char *args) {
 	char *arg = strtok(NULL, " ");
 	if (arg == NULL)
@@ -47,19 +49,39 @@ static int cmd_si(char *args) {
 	return 0;
 }
 
-static int cmd_help(char *args);
+static int cmd_info(char *args) {
+	return 0;
+}
+
+static int cmd_scanm(char *args) {
+	return 0;
+}
+
+static int cmd_expr(char *args) {
+	return 0;
+}
+
+static int cmd_set_watchpoint(char *args) {
+	return 0;
+}
+
+static int cmd_del_watchpoint(char *args) {
+	return 0;
+}
 
 static struct {
 	char *name;
 	char *description;
 	int (*handler)(char *);
-} cmd_table[] = {
-	{ "help", "Display informations about all supported commands", cmd_help },
-	{ "c", "Continue the execution of the program", cmd_c },
-	{ "q", "Exit NEMU", cmd_q },
-	{ "si", "Step one instruction exactly", cmd_si }
-
-	/* TODO: Add more commands */
+} cmd_table[] = { { "help", "Display informations about all supported commands", cmd_help },
+		  { "c", "Continue the execution of the program", cmd_c },
+		  { "q", "Exit NEMU", cmd_q },
+		  { "si", "Step one instruction exactly", cmd_si },
+		  { "info", "Print the state of registers", cmd_info },
+		  { "x", "Memory address", cmd_scanm },
+		  { "p", "Compute the value of EXPR", cmd_expr },
+		  { "w", "Set a watchpoint", cmd_set_watchpoint },
+		  { "d", "Delete the watchpoint", cmd_del_watchpoint }
 
 };
 
