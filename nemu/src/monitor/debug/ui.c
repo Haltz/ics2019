@@ -76,12 +76,12 @@ static struct {
 } cmd_table[] = { { "help", "Display informations about all supported commands", cmd_help },
 		  { "c", "Continue the execution of the program", cmd_c },
 		  { "q", "Exit NEMU", cmd_q },
-		  { "si", "Step one instruction exactly", cmd_si },
-		  { "info", "Print the state of registers", cmd_info },
+		  { "si", "Step n forward exactly", cmd_si },
+		  { "info", "State of registers", cmd_info },
 		  { "x", "Memory address", cmd_scanm },
-		  { "p", "Compute the value of EXPR", cmd_expr },
+		  { "p", "Compute expression", cmd_expr },
 		  { "w", "Set a watchpoint", cmd_set_watchpoint },
-		  { "d", "Delete the watchpoint", cmd_del_watchpoint }
+		  { "d", "Delete a watchpoint", cmd_del_watchpoint }
 
 };
 
