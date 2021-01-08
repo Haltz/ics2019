@@ -47,7 +47,7 @@ typedef struct {
       uint32_t IF:1; 
       unsigned :1; 
       uint32_t OF:1; 
-      unsigned : 20;
+      unsigned : 20; // reserved bits, to align
     };
     uint32_t val;
   } eflags;
