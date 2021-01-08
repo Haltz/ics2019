@@ -50,7 +50,14 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_info(char *args) {
-	return 0;
+	char *arg = strtok(NULL, " ");
+	if (strcmp(arg, "r") == 0) {
+		isa_reg_display();
+		return 0;
+	} else if (strcmp(arg, "w") == 0) {
+		return 0;
+	} else
+		return -1;
 }
 
 static int cmd_scanm(char *args) {
