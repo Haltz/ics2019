@@ -64,6 +64,7 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_scanm(char *args) {
+	// doesn't test it.
 	return 0;
 }
 
