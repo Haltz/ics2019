@@ -60,7 +60,8 @@ typedef struct token {
 	char str[TOKEN_LEN];
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
+#define NR_TOKENS 64
+static Token tokens[NR_TOKENS] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
 
 static bool make_token(char *e) {
@@ -84,10 +85,26 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
+				if (substr_len > TOKEN_LEN) {
+					printf("Err: token length overflow.\n");
+					return false;
+				}
+				if (nr_token > NR_TOKENS) {
+					printf("Err: token number exceed.\n");
+					return false;
+				}
 
 				switch (rules[i].token_type) {
+				case TK_NOTYPE:
+					break;
+				case TK_NUM:
+				case TK_HEX:
+				case TK_REG:
+					strncpy(tokens[nr_token].str, substr_start, substr_len);
+					tokens[nr_token].str[substr_len] = '\0';
 				default:
-					TODO();
+					tokens[nr_token].type = rules[i].token_type;
+					++nr_token;
 				}
 
 				break;
@@ -101,6 +118,10 @@ static bool make_token(char *e) {
 	}
 
 	return true;
+}
+
+bool is_op(int ch) {
+	return ch == TK_PLUS || ch == TK_SUB || ch == TK_MUL || ch == TK_DIV || ch == TK_AND || ch == TK_OR || ch == TK_EQ || ch == TK_DEREF;
 }
 
 uint32_t expr(char *e, bool *success) {
