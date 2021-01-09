@@ -28,6 +28,8 @@ make_EHelper(call) {
 	rtl_push(pc);
 	rtl_j(decinfo.jmp_pc);
 
+	printf("here***********************************************************************\n");
+
 	print_asm("call %x", decinfo.jmp_pc);
 }
 
