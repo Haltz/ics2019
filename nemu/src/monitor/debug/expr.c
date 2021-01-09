@@ -228,12 +228,14 @@ uint32_t eval(int head, int tail) {
 		}
 	} else if (expr_match_parens(head, tail) == true) //两头都有括号且匹配
 		return eval(head + 1, tail - 1);
-	else if (tokens[head].type == DEREF && tail - head == 1) { //指针解引符时
+	else if (tokens[head].type == DEREF && tail - head == 1) {
+		// deference
 		int add;
 		add = strtol(tokens[tail].str, NULL, 0);
 		vaddr_t data = vaddr_read(add, 32);
 		return data;
-	} else if (tokens[head].type == NEGA && tail - head == 1) { //负号时
+	} else if (tokens[head].type == NEGA && tail - head == 1) {
+		// negative
 		uint32_t number;
 		sscanf(tokens[tail].str, "%d", &number);
 		number = -number;
