@@ -38,23 +38,57 @@ char *strncpy(char *dst, const char *src, size_t n) {
 }
 
 char *strcat(char *dst, const char *src) {
-	return NULL;
+	char *ret = dst;
+
+	while (*dst)
+		dst += 1;
+	while ((*dst++ = *src++))
+		;
+
+	return ret;
 }
 
 int strcmp(const char *s1, const char *s2) {
-	return 0;
+	assert(s1 != NULL && s2 != NULL);
+
+	while (*s1 && *s2 && (*s1 == *s2)) {
+		s1 += 1;
+		s2 += 1;
+	}
+
+	if (*s1 == *s2)
+		return 0;
+	else if (*s1 > *s2)
+		return 1;
+
+	return -1;
 }
 
 int strncmp(const char *s1, const char *s2, size_t n) {
-	return 0;
+	if (!n)
+		return 0;
+	while (--n && *s1 && (*s1 == *s2)) {
+		s1++;
+		s2++;
+	}
+
+	return *(unsigned char *)s1 - *(unsigned char *)s2;
 }
 
 void *memset(void *v, int c, size_t n) {
-	return NULL;
+	char *ret = (char *)v;
+	assert(v != NULL || n > 0);
+	while (n--)
+		*ret++ = c;
+	return v;
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-	return NULL;
+	char *csrc = (char *)in, *cdest = (char *)out;
+	for (int i = 0; i < n; i++) {
+		cdest[i] = csrc[i];
+	}
+	return out;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
