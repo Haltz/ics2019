@@ -42,8 +42,9 @@ make_group(gp1, EX(add), EX(or), EX(adc), EX(sbb), EX(and), EX(sub), EX(xor), EX
 
 		/* 0x08 */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0x0c */ EMPTY, EMPTY, EMPTY, EX(2byte_esc),
-		/* 0x10 */ EMPTY, EMPTY, EMPTY, EMPTY,
-		/* 0x14 */ EMPTY, EMPTY, EMPTY, EMPTY,
+
+		/* 0x10 */ IDEXW(G2E, adc, 1), IDEX(G2E, adc), IDEXW(E2G, adc, 1), IDEX(E2G, adc),
+		/* 0x14 */ IDEXW(I2a, adc, 1), IDEX(I2a, adc), EMPTY, EMPTY,
 		/* 0x18 */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0x1c */ EMPTY, EMPTY, EMPTY, EMPTY,
 
