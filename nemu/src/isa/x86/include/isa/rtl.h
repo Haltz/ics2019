@@ -42,14 +42,15 @@ static inline void rtl_push(const rtlreg_t *src1) {
 	// M[esp] <- src1
 
 	cpu.esp -= 4;
-	//vaddr_write(cpu.esp,*src1,4);
 	rtl_sm(&cpu.esp, src1, 4);
 }
 
 static inline void rtl_pop(rtlreg_t *dest) {
 	// dest <- M[esp]
 	// esp <- esp + 4
-	TODO();
+
+	rtl_lm(dest, &cpu.esp, 4);
+	cpu.esp += 4;
 }
 
 static inline void rtl_is_sub_overflow(rtlreg_t *dest, const rtlreg_t *res, const rtlreg_t *src1, const rtlreg_t *src2, int width) {
