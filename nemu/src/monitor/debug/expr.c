@@ -8,30 +8,26 @@
 
 #define TOKEN_LEN 200
 
-enum { TK_NOTYPE = 256, TK_EQ, TK_NUM, TK_PLUS, TK_SUB, TK_MUL, TK_DIV, TK_LBR, TK_RBR, TK_HEX, TK_REG, TK_AND, TK_OR, TK_DEREF };
+enum { TK_NOTYPE = 256, TK_EQ, TK_INEQ, TK_HEX, TK_FIG, TK_AND, TK_SHFT, TK_REG, DEREF, NEGA };
 
 static struct rule {
 	char *regex;
 	int token_type;
 } rules[] = {
-
-	/* TODO: Add more rules.
-   * Pay attention to the precedence level of different rules.
-   */
-
 	{ " +", TK_NOTYPE }, // spaces
-	{ "\\+", TK_PLUS }, // plus
+	{ "\\(", '(' }, // left parenthesis
+	{ "\\)", ')' }, // right parenthesis
+	{ "\\+", '+' }, // plus
+	{ "-", '-' }, // minus
+	{ "\\*", '*' }, // multiply
+	{ "/", '/' }, // divide
 	{ "==", TK_EQ }, // equal
-	{ "-", TK_SUB }, // substract
-	{ "\\*", TK_MUL }, // multiply or derefrence
-	{ "/", TK_DIV }, // divide
-	{ "0[Xx][0-9a-fA-F]+", TK_HEX }, // hex (must before the TK_NUM)
-	{ "[0-9]+", TK_NUM }, // number(dec)
-	{ "\\(", TK_LBR }, // left bracket
-	{ "\\)", TK_RBR }, // right bracket
-	{ "\\$[a-zA-Z]+", TK_REG }, // register
-	{ "&&", TK_AND }, // AND
-	{ "\\|\\|", TK_OR } // OR
+	{ "!=", TK_INEQ }, // inequal
+	{ "\\b0[xX][0-9a-fA-F]+\\b", TK_HEX }, // hexnumber
+	{ "[0-9]+", TK_FIG }, //figures
+	{ "&&", TK_AND }, // and
+	{ "<=", TK_SHFT }, //shift
+	{ "\\$[a-zA-Z_]+", TK_REG } //register
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
@@ -97,14 +93,48 @@ static bool make_token(char *e) {
 				switch (rules[i].token_type) {
 				case TK_NOTYPE:
 					break;
-				case TK_NUM:
-				case TK_HEX:
-				case TK_REG:
-					strncpy(tokens[nr_token].str, substr_start, substr_len);
-					tokens[nr_token].str[substr_len] = '\0';
-				default:
+				case (int)'(':
+				case (int)')':
+				case (int)'*':
+				case (int)'/':
+				case (int)'+':
+				case (int)'-':
 					tokens[nr_token].type = rules[i].token_type;
-					++nr_token;
+					//tokens[nr_token].str[0] = e[position - substr_len];
+					strncpy(tokens[nr_token].str, substr_start, substr_len);
+					nr_token += 1;
+					break;
+				case TK_EQ:
+				case TK_INEQ:
+				case TK_SHFT:
+				case TK_AND:
+					tokens[nr_token].type = rules[i].token_type;
+					/*tokens[nr_token].str[0] = e[position - substr_len];
+               tokens[nr_token].str[1] = e[position - substr_len + 1];*/
+					strncpy(tokens[nr_token].str, substr_start, substr_len);
+					nr_token += 1;
+					break;
+				case TK_FIG:
+				case TK_HEX:
+					tokens[nr_token].type = rules[i].token_type;
+					int l = TOKEN_LEN - 1;
+					if (substr_len > l)
+						assert(0);
+					/*int t = position - substr_len 
+               for (int j = 0; j< substr_len; j++){
+                tokens[nr_token].str[j] = e[t];
+                t+=1;
+               }*/
+					strncpy(tokens[nr_token].str, substr_start, substr_len);
+					nr_token += 1;
+					break;
+				case TK_REG:
+					tokens[nr_token].type = rules[i].token_type;
+					strncpy(tokens[nr_token].str, substr_start, substr_len);
+					nr_token += 1;
+					break;
+				default:
+					break;
 				}
 
 				break;
@@ -115,36 +145,16 @@ static bool make_token(char *e) {
 			printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
 			return false;
 		}
+
+		for (int i = 0; i < nr_token; i++) {
+			if (tokens[i].type == (int)'*' && (i == 0 || tokens[i - 1].type == (int)'+' || tokens[i - 1].type == (int)'-' || tokens[i - 1].type == (int)'*' || tokens[i - 1].type == (int)'/' || tokens[i - 1].type == (int)'('))
+				tokens[i].type = DEREF; //对于解引符号的判断
+			else if (tokens[i].type == (int)'-' && (i == 0 || tokens[i - 1].type == (int)'+' || tokens[i - 1].type == (int)'-' || tokens[i - 1].type == (int)'*' || tokens[i - 1].type == (int)'/' || tokens[i - 1].type == (int)'('))
+				tokens[i].type = NEGA; //对负号进行判断
+		}
 	}
 
 	return true;
-}
-
-bool is_op(int ch) {
-	return ch == TK_PLUS || ch == TK_SUB || ch == TK_MUL || ch == TK_DIV || ch == TK_AND || ch == TK_OR || ch == TK_EQ || ch == TK_DEREF;
-}
-
-/* return the priority of the oprator*/
-int op_prio(int op) {
-	int pri;
-	switch (op) {
-	case TK_OR:
-		return 0;
-	case TK_AND:
-		return 1;
-	case TK_EQ:
-		return 2;
-	case TK_PLUS:
-	case TK_SUB:
-		return 3;
-	case TK_MUL:
-	case TK_DIV:
-		return 4;
-	case TK_DEREF:
-		return 5;
-	default:
-		return (1 << 31) - 1;
-	}
 }
 
 uint32_t expr(char *e, bool *success) {
