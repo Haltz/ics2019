@@ -20,7 +20,7 @@ make_EHelper(xor);
 make_EHelper(or); // un
 make_EHelper(adc); //un
 make_EHelper(sbb); // un
-make_EHelper(and); // un
+make_EHelper(and);
 make_EHelper(cmp); // un
 
 make_EHelper(lea);
