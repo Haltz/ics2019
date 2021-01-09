@@ -25,10 +25,8 @@ make_EHelper(jmp_rm) {
 }
 
 make_EHelper(call) {
-	rtl_push(pc);
+	rtl_push(&decinfo.seq_pc);
 	rtl_j(decinfo.jmp_pc);
-
-	printf("here***********************************************************************\n");
 
 	print_asm("call %x", decinfo.jmp_pc);
 }
@@ -47,8 +45,9 @@ make_EHelper(ret_imm) {
 }
 
 make_EHelper(call_rm) {
-	decinfo.jmp_pc = id_dest->val;
-	rtl_push(pc);
-	rtl_j(decinfo.jmp_pc);
+	rtl_push(&decinfo.seq_pc);
+	decinfo.is_jmp = 0;
+	decinfo.seq_pc = id_dest->val;
+
 	print_asm("call *%s", id_dest->str);
 }
