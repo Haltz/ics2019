@@ -85,7 +85,7 @@ make_group(gp1, EX(add), EX(or), EX(adc), EX(sbb), EX(and), EX(sub), EX(xor), EX
 		/* 0x98 */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0x9c */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0xa0 */ IDEXW(O2a, mov, 1), IDEX(O2a, mov), IDEXW(a2O, mov, 1), IDEX(a2O, mov),
-		/* 0xa4 */ EX(movsb), EX(movs), EMPTY, EMPTY,
+		/* 0xa4 */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0xa8 */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0xac */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0xb0 */ IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1),
