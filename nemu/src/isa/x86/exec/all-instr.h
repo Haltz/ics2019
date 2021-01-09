@@ -32,3 +32,5 @@ make_EHelper(movzx);
 make_EHelper(movsx);
 make_EHelper(mov_r2cr);
 make_EHelper(mov_cr2r);
+
+make_EHelper(test);
