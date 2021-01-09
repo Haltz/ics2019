@@ -9,6 +9,7 @@
 #define TOKEN_LEN 200
 
 enum { TK_NOTYPE = 256, TK_EQ, TK_INEQ, TK_HEX, TK_FIG, TK_AND, TK_SHFT, TK_REG, DEREF, NEGA };
+enum { EXPR_INVAL, EXPR_VAL, EXPR_PAREN_MISMATCH };
 
 static struct rule {
 	char *regex;
@@ -157,24 +158,6 @@ static bool make_token(char *e) {
 	return true;
 }
 
-int expr_match_parens(int begin_pos, int end_pos) { // examing parentheses
-	if (!(tokens[begin_pos].type == (int)'(' && tokens[end_pos].type == (int)')')) //整个表达式左右两头是否都有括号
-		return 0;
-
-	int cnt = 0; //count用来判断两头匹配情况，出现-1说明内部匹配，两头不匹配
-	for (int j = begin_pos + 1; j < end_pos; j++) {
-		if (cnt < 0)
-			return 0;
-
-		if (tokens[j].type == (int)'(')
-			cnt++;
-		else if (tokens[j].type == (int)')')
-			cnt--;
-	}
-
-	return 1;
-}
-
 uint32_t expr(char *e, bool *success) {
 	if (!make_token(e)) {
 		*success = false;
@@ -182,9 +165,81 @@ uint32_t expr(char *e, bool *success) {
 	}
 
 	/* TODO: Insert codes to evaluate the expression. */
-	switch (tokens[0].type) {
-	default:
-		return 0;
+	int begin_pos = 0, end_pos = nr_token - 1;
+
+	/*check validity of expr*/
+	int valid_state = EXPR_VAL;
+
+	if (!(tokens[begin_pos].type == (int)'(' || tokens[begin_pos].type == TK_FIG || tokens[begin_pos].type == NEGA || tokens[begin_pos].type == DEREF || tokens[begin_pos].type == TK_REG || tokens[begin_pos].type == TK_HEX))
+		valid_state = EXPR_INVAL;
+	if (!(tokens[end_pos].type == (int)')' || tokens[end_pos].type == TK_FIG || tokens[end_pos].type == TK_HEX || tokens[end_pos].type == TK_REG))
+		valid_state = EXPR_INVAL;
+
+	for (int i = 0; i < end_pos; i++) {
+		switch (tokens[i].type) {
+		case (int)'+':
+		case (int)'-':
+		case (int)'*':
+		case (int)'/':
+		case (int)'(':
+			if (!(tokens[i + 1].type == TK_FIG || tokens[i + 1].type == (int)'(' || tokens[i + 1].type == NEGA || tokens[i + 1].type == DEREF || tokens[i + 1].type == TK_REG || tokens[i + 1].type == TK_HEX))
+				valid_state = EXPR_INVAL;
+			break;
+		case DEREF:
+		case NEGA:
+			if (!(tokens[i + 1].type == TK_FIG || tokens[i + 1].type == TK_HEX || tokens[i + 1].type == TK_REG))
+				valid_state = EXPR_INVAL;
+			break;
+		case (int)')':
+			if (tokens[i + 1].type == TK_FIG || tokens[i + 1].type == (int)'(' || tokens[i + 1].type == TK_REG || tokens[i + 1].type == TK_HEX)
+				valid_state = EXPR_INVAL;
+			break;
+		case TK_FIG:
+		case TK_HEX:
+		case TK_REG:
+			if (tokens[i + 1].type == (int)'(')
+				valid_state = EXPR_INVAL;
+			break;
+		case TK_EQ:
+		case TK_INEQ:
+		case TK_AND:
+			if (!(tokens[i + 1].type == TK_FIG || tokens[i + 1].type == DEREF || tokens[i + 1].type == NEGA || tokens[i + 1].type == TK_REG || tokens[i + 1].type == TK_HEX))
+				valid_state = EXPR_INVAL;
+			break;
+		default:
+			valid_state = EXPR_INVAL;
+			break;
+		}
+
+		if (valid_state == EXPR_INVAL)
+			break;
+	}
+
+	// check parens match
+	int par = 0;
+	for (int i = 0; i <= end_pos; i++) {
+		if (tokens[i].type == (int)'(')
+			par += 1;
+		else if (tokens[i].type == (int)')')
+			par -= 1;
+
+		if (par < 0) {
+			valid_state = EXPR_PAREN_MISMATCH; //右括号多了
+			break;
+		}
+	}
+	if (par > 0)
+		valid_state = EXPR_PAREN_MISMATCH;
+
+	switch (valid_state) {
+	case EXPR_VAL:
+		return eval(begin_pos, end_pos);
+	case EXPR_INVAL:
+		printf("INVAL\n");
+		break;
+	case EXPR_PAREN_MISMATCH:
+		printf("PAREN_ERR\n");
+		break;
 	}
 
 	return 0;
