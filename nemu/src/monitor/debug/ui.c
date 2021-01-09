@@ -75,6 +75,11 @@ static int cmd_expr(char *args) {
 }
 
 static int cmd_set_watchpoint(char *args) {
+	WP *wp = new_wp();
+	strcpy(wp->expr, args);
+	bool b = true;
+	bool *success = &b;
+	wp->val = expr(wp->expr, success);
 	return 0;
 }
 
