@@ -10,10 +10,6 @@ make_EHelper(sub) {
 	rtl_sub(&s0, &id_dest->val, &id_src->val);
 	operand_write(id_dest, &s0);
 
-	if (id_dest->width != 4) {
-		rtl_andi(&s0, &s0, 0xffffffffu >> ((4 - id_dest->width) * 8));
-	}
-
 	rtl_update_ZFSF(&s0, id_dest->width);
 
 	// cf flag
