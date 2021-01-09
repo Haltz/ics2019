@@ -12,11 +12,9 @@ make_EHelper(sub) {
 
 	rtl_update_ZFSF(&s0, id_dest->width);
 
-	// cf flag
 	rtl_is_sub_carry(&s1, &s0, &id_dest->val);
 	rtl_set_CF(&s1);
 
-	// of flag
 	rtl_is_sub_overflow(&s1, &s0, &id_dest->val, &id_src->val, id_dest->width);
 	rtl_set_OF(&s1);
 

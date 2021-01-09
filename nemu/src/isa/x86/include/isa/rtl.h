@@ -55,16 +55,22 @@ static inline void rtl_pop(rtlreg_t *dest) {
 
 static inline void rtl_is_sub_overflow(rtlreg_t *dest, const rtlreg_t *res, const rtlreg_t *src1, const rtlreg_t *src2, int width) {
 	// dest <- is_overflow(src1 - src2)
-	// check if top bit of unsigned number substraction is same as number substracted
-	rtl_xor(&t0, src1, src2);
-	rtl_xor(&t1, src1, res);
-	rtl_and(&t0, &t0, &t1);
-	rtl_msb(dest, &t0, width);
+	t0 = ((*src1) >> (8 * width - 1)) & 1;
+	t1 = ((*src2) >> (8 * width - 1)) & 1;
+
+	rtl_xor(&t1, &t0, &t1);
+	if (!t1)
+		*dest = 0;
+	else {
+		t1 = ((*res) >> (8 * width - 1)) & 1;
+		rtl_xor(&t0, &t0, &t1);
+		*dest = t0;
+	}
 }
 
 static inline void rtl_is_sub_carry(rtlreg_t *dest, const rtlreg_t *res, const rtlreg_t *src1) {
 	// dest <- is_carry(src1 - src2)
-	rtl_setrelop(RELOP_LTU, dest, src1, res);
+	*dest = (*res > *src1);
 }
 
 static inline void rtl_is_add_overflow(rtlreg_t *dest, const rtlreg_t *res, const rtlreg_t *src1, const rtlreg_t *src2, int width) {
