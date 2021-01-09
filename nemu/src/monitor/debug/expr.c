@@ -170,12 +170,12 @@ int expr_match_parens(int begin_pos, int end_pos) { // examing parentheses
 	return 1;
 }
 
-int find_main_op(int p, int q) {
+int find_main_op(int begin_pos, int end_pos) {
 	int mul_div[32]; //用来存储*, /的位置，第一个是最靠右的
-	int dual[32]; //用来存储==，!=, <=等运算符的位置
+	int dual[32]; //用来存储==，!=, <=等的位置
 	int i = 0, j = 0;
 	bool flag = false;
-	for (int t = q; t > p;) {
+	for (int t = end_pos; t > begin_pos;) {
 		if (tokens[t].type == (int)')') {
 			int flag = 1;
 			while (flag != 0) {
@@ -225,7 +225,7 @@ uint32_t eval(int head, int tail) {
 			number = strtol(tokens[head].str, NULL, 0);
 			return number;
 		}
-	} else if (check_parentheses(head, tail) == true) //两头都有括号且匹配
+	} else if (expr_match_parens(head, tail) == true) //两头都有括号且匹配
 		return eval(head + 1, tail - 1);
 	else if (tokens[head].type == DEREF && tail - head == 1) { //指针解引符时
 		int add;
