@@ -18,6 +18,10 @@ void init_wp_pool() {
 	free_ = wp_pool;
 }
 
+inline WP *return_head() {
+	return head;
+}
+
 WP *new_wp() {
 	if (free_ == NULL) {
 		printf("free_ is NULL.\n");
