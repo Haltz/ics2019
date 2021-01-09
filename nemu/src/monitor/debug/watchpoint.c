@@ -47,6 +47,8 @@ bool free_wp(int n) {
 		assert(0);
 	}
 
+	printf("123\n");
+
 	WP *wp = head;
 	int flag = 0;
 	while (wp != NULL) {
@@ -87,7 +89,6 @@ bool free_wp(int n) {
 			wp->next = NULL;
 			return true;
 		}
-		printf("123\n");
 	} else {
 		WP *p = free_;
 		while (p->next != NULL) {
