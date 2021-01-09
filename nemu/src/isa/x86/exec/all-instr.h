@@ -24,3 +24,4 @@ make_EHelper(and);
 make_EHelper(cmp); // un
 
 make_EHelper(lea);
+make_EHelper(nop);
