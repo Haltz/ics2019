@@ -47,8 +47,6 @@ make_EHelper(nop);
 make_EHelper(setcc);
 make_EHelper(mov);
 make_EHelper(movzx);
-make_EHelper(movsb);
-make_EHelper(movs);
 make_EHelper(movsx);
 make_EHelper(mov_r2cr);
 make_EHelper(mov_cr2r);
