@@ -147,10 +147,12 @@ make_group(gp1, EX(add), EX(or), EX(adc), EX(sbb), EX(and), EX(sub), EX(xor), EX
 		/* 0x84 */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0x88 */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0x8c */ EMPTY, EMPTY, EMPTY, EMPTY,
-		/* 0x90 */ EMPTY, EMPTY, EMPTY, EMPTY,
-		/* 0x94 */ EMPTY, EMPTY, EMPTY, EMPTY,
-		/* 0x98 */ EMPTY, EMPTY, EMPTY, EMPTY,
-		/* 0x9c */ EMPTY, EMPTY, EMPTY, EMPTY,
+
+		/* 0x90 */ IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1),
+		/* 0x94 */ IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1),
+		/* 0x98 */ IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1),
+		/* 0x9c */ IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1), IDEXW(setcc_E, setcc, 1),
+
 		/* 0xa0 */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0xa4 */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0xa8 */ EMPTY, EMPTY, EMPTY, EMPTY,

@@ -25,3 +25,5 @@ make_EHelper(cmp); // un
 
 make_EHelper(lea);
 make_EHelper(nop);
+
+make_EHelper(setcc);
