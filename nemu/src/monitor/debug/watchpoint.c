@@ -101,6 +101,7 @@ bool free_wp(int n) {
 		wp->next = NULL;
 		return true;
 	}
+	printf("123\n");
 	return false;
 }
 
