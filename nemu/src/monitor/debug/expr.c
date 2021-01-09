@@ -157,6 +157,24 @@ static bool make_token(char *e) {
 	return true;
 }
 
+int expr_match_parens(int begin_pos, int end_pos) { // examing parentheses
+	if (!(tokens[begin_pos].type == (int)'(' && tokens[end_pos].type == (int)')')) //整个表达式左右两头是否都有括号
+		return 0;
+
+	int cnt = 0; //count用来判断两头匹配情况，出现-1说明内部匹配，两头不匹配
+	for (int j = begin_pos + 1; j < end_pos; j++) {
+		if (cnt < 0)
+			return 0;
+
+		if (tokens[j].type == (int)'(')
+			cnt++;
+		else if (tokens[j].type == (int)')')
+			cnt--;
+	}
+
+	return 1;
+}
+
 uint32_t expr(char *e, bool *success) {
 	if (!make_token(e)) {
 		*success = false;
