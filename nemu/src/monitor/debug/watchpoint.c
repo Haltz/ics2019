@@ -47,8 +47,6 @@ bool free_wp(int n) {
 		assert(0);
 	}
 
-	printf("123\n");
-
 	WP *wp = head;
 	int flag = 0;
 	while (wp != NULL) {
