@@ -104,4 +104,37 @@ bool free_wp(int n) {
 	return false;
 }
 
+void print_all_wp() {
+	if (head != NULL) {
+		printf("No.   expr\n ");
+		WP *p = head;
+		while (p != NULL) {
+			printf("%d  %s\n", p->NO, p->expr);
+			p = p->next;
+		}
+	} else
+		printf("No watchpoint\n");
+}
+
+bool check_wp() {
+	WP *p = head;
+	bool b = true;
+	bool *success = &b;
+	int flag = 1;
+	while (p != NULL) {
+		int nv = expr(p->expr, success);
+		if (nv != p->val) {
+			flag = 0;
+			// printf("%d wp's old value is %d\n", p->NO, p->val);
+			// printf("%d wp'snew value is %d\n", p->NO, nv);
+			p->val = nv;
+		}
+		p = p->next;
+	}
+	if (flag == 0)
+		return false;
+	else
+		return true;
+}
+
 /* TODO: Implement the functionality of watchpoint */
