@@ -101,7 +101,6 @@ static bool make_token(char *e) {
 				case (int)'+':
 				case (int)'-':
 					tokens[nr_token].type = rules[i].token_type;
-					//tokens[nr_token].str[0] = e[position - substr_len];
 					strncpy(tokens[nr_token].str, substr_start, substr_len);
 					nr_token += 1;
 					break;
@@ -110,8 +109,6 @@ static bool make_token(char *e) {
 				case TK_SHFT:
 				case TK_AND:
 					tokens[nr_token].type = rules[i].token_type;
-					/*tokens[nr_token].str[0] = e[position - substr_len];
-               tokens[nr_token].str[1] = e[position - substr_len + 1];*/
 					strncpy(tokens[nr_token].str, substr_start, substr_len);
 					nr_token += 1;
 					break;
@@ -121,11 +118,6 @@ static bool make_token(char *e) {
 					int l = TOKEN_LEN - 1;
 					if (substr_len > l)
 						assert(0);
-					/*int t = position - substr_len 
-               for (int j = 0; j< substr_len; j++){
-                tokens[nr_token].str[j] = e[t];
-                t+=1;
-               }*/
 					strncpy(tokens[nr_token].str, substr_start, substr_len);
 					nr_token += 1;
 					break;
@@ -148,10 +140,12 @@ static bool make_token(char *e) {
 		}
 
 		for (int i = 0; i < nr_token; i++) {
+			// dereference
 			if (tokens[i].type == (int)'*' && (i == 0 || tokens[i - 1].type == (int)'+' || tokens[i - 1].type == (int)'-' || tokens[i - 1].type == (int)'*' || tokens[i - 1].type == (int)'/' || tokens[i - 1].type == (int)'('))
-				tokens[i].type = DEREF; //对于解引符号的判断
+				tokens[i].type = DEREF;
+			// negative
 			else if (tokens[i].type == (int)'-' && (i == 0 || tokens[i - 1].type == (int)'+' || tokens[i - 1].type == (int)'-' || tokens[i - 1].type == (int)'*' || tokens[i - 1].type == (int)'/' || tokens[i - 1].type == (int)'('))
-				tokens[i].type = NEGA; //对负号进行判断
+				tokens[i].type = NEGA;
 		}
 	}
 
@@ -162,7 +156,7 @@ int expr_match_parens(int begin_pos, int end_pos) { // examing parentheses
 	if (!(tokens[begin_pos].type == (int)'(' && tokens[end_pos].type == (int)')'))
 		return 0;
 
-	int cnt = 0; //count用来判断两头匹配情况，出现-1说明内部匹配，两头不匹配
+	int cnt = 0;
 	for (int j = begin_pos + 1; j < end_pos; j++) {
 		if (cnt < 0)
 			return 0;
@@ -174,6 +168,108 @@ int expr_match_parens(int begin_pos, int end_pos) { // examing parentheses
 	}
 
 	return 1;
+}
+
+int find_main_op(int p, int q) {
+	int mul_div[32]; //用来存储*, /的位置，第一个是最靠右的
+	int dual[32]; //用来存储==，!=, <=等运算符的位置
+	int i = 0, j = 0;
+	bool flag = false;
+	for (int t = q; t > p;) {
+		if (tokens[t].type == (int)')') {
+			int flag = 1;
+			while (flag != 0) {
+				t -= 1;
+				if (tokens[t].type == (int)')')
+					flag += 1;
+				else if (tokens[t].type == (int)'(')
+					flag -= 1;
+			}
+		} else if (tokens[t].type == (int)'+' || tokens[t].type == (int)'-')
+			return t;
+		else if (tokens[t].type == (int)'*' || tokens[t].type == (int)'/') {
+			mul_div[i] = t;
+			flag = true;
+			i += 1;
+		} else if (tokens[t].type == TK_EQ || tokens[t].type == TK_INEQ || tokens[t].type == TK_AND) {
+			dual[j] = t;
+			j += 1;
+		}
+		t -= 1;
+	}
+	if (flag == true)
+		return mul_div[0];
+	else
+		return dual[0];
+}
+
+uint32_t eval(int head, int tail) {
+	if (head == tail) { //最简单的表达式形式，一个数字或寄存器
+		if (tokens[head].type == TK_FIG) {
+			uint32_t number;
+			sscanf(tokens[head].str, "%d", &number);
+			return number;
+		} else if (tokens[head].type == TK_REG) {
+			char s[4] = "reg";
+			int i = 1, j = 0;
+			while (tokens[head].str[i] != '\0' && s[j] != '\0') {
+				s[j] = tokens[head].str[i];
+				j += 1;
+				i += 1;
+			}
+			bool p = true;
+			bool *success = &p;
+			return isa_reg_str2val(s, success);
+		} else if (tokens[head].type == TK_HEX) {
+			uint32_t number;
+			number = strtol(tokens[head].str, NULL, 0);
+			return number;
+		}
+	} else if (check_parentheses(head, tail) == true) //两头都有括号且匹配
+		return eval(head + 1, tail - 1);
+	else if (tokens[head].type == DEREF && tail - head == 1) { //指针解引符时
+		int add;
+		add = strtol(tokens[tail].str, NULL, 0);
+		vaddr_t data = vaddr_read(add, 32);
+		return data;
+	} else if (tokens[head].type == NEGA && tail - head == 1) { //负号时
+		uint32_t number;
+		sscanf(tokens[tail].str, "%d", &number);
+		number = -number;
+		return number;
+	} else { //主运算符处理法
+		int op = find_main_op(head, tail);
+		uint32_t val1 = eval(head, op - 1);
+		uint32_t val2 = eval(op + 1, tail);
+		switch (tokens[op].type) {
+		case (int)'+':
+			return val1 + val2;
+			break;
+		case (int)'-':
+			return val1 - val2;
+			break;
+		case (int)'*':
+			return val1 * val2;
+			break;
+		case (int)'/':
+			return val1 / val2;
+			break;
+		case TK_EQ:
+			return val1 == val2;
+			break;
+		case TK_INEQ:
+			return val1 != val2;
+			break;
+		case TK_AND:
+			return val1 && val2;
+			break;
+		case TK_SHFT:
+			break;
+		default:
+			break;
+		}
+	}
+	return 0;
 }
 
 uint32_t expr(char *e, bool *success) {
