@@ -58,3 +58,12 @@ _Context *do_syscall(_Context *c) {
 
 	return NULL;
 }
+
+size_t sys_write(int fd, const void *buf, size_t count) {
+	if (fd == 1 || fd == 2) {
+		for (int i = 0; i < count; i++) {
+			_putc(((char *)buf)[i]);
+		}
+	}
+	return count;
+}
