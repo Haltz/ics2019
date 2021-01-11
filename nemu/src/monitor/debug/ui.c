@@ -78,13 +78,22 @@ static int cmd_expr(char *args) {
 static int cmd_set_watchpoint(char *args) {
 	WP *wp = new_wp();
 	strcpy(wp->expr, args);
-	bool b = true;
+	bool  b	      = true;
 	bool *success = &b;
-	wp->val = expr(wp->expr, success);
+	wp->val	      = expr(wp->expr, success);
 	return 0;
 }
 
 static int cmd_del_watchpoint(char *args) {
+	int n;
+
+	sscanf(args, "%d", &n);
+
+	if (free_wp(n)) {
+		printf("Watchpoint deleted.\n");
+		return 1;
+	}
+
 	return 0;
 }
 
@@ -109,7 +118,7 @@ static struct {
 static int cmd_help(char *args) {
 	/* extract the first argument */
 	char *arg = strtok(NULL, " ");
-	int i;
+	int   i;
 
 	if (arg == NULL) {
 		/* no argument given */

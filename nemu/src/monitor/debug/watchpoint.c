@@ -3,18 +3,18 @@
 
 #define NR_WP 32
 
-static WP wp_pool[NR_WP] = {};
+static WP  wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
 
 void init_wp_pool() {
 	int i;
 	for (i = 0; i < NR_WP; i++) {
-		wp_pool[i].NO = i;
+		wp_pool[i].NO	= i;
 		wp_pool[i].next = &wp_pool[i + 1];
 	}
 	wp_pool[NR_WP - 1].next = NULL;
 
-	head = NULL;
+	head  = NULL;
 	free_ = wp_pool;
 }
 
@@ -29,8 +29,8 @@ WP *new_wp() {
 	}
 
 	if (head == NULL) {
-		head = free_;
-		free_ = free_->next;
+		head	   = free_;
+		free_	   = free_->next;
 		head->next = NULL;
 		return head;
 	}
@@ -39,8 +39,8 @@ WP *new_wp() {
 	while (p->next != NULL)
 		p = p->next;
 	p->next = free_;
-	free_ = free_->next;
-	p = p->next;
+	free_	= free_->next;
+	p	= p->next;
 	p->next = NULL;
 	return p;
 }
@@ -51,7 +51,7 @@ bool free_wp(int n) {
 		assert(0);
 	}
 
-	WP *wp = head;
+	WP *wp	 = head;
 	int flag = 0;
 	while (wp != NULL) {
 		if (wp->NO == n) {
@@ -78,17 +78,17 @@ bool free_wp(int n) {
 	}
 
 	if (free_ == NULL) {
-		free_ = wp;
+		free_	 = wp;
 		wp->next = NULL;
 		return true;
 	} else if (free_->next == NULL) {
 		if (n > free_->NO) {
 			wp->next = free_;
-			free_ = wp;
+			free_	 = wp;
 			return true;
 		} else {
 			free_->next = wp;
-			wp->next = NULL;
+			wp->next    = NULL;
 			return true;
 		}
 	} else {
@@ -96,12 +96,12 @@ bool free_wp(int n) {
 		while (p->next != NULL) {
 			if (p->NO < n && p->next->NO > n) {
 				wp->next = p->next;
-				p->next = wp;
+				p->next	 = wp;
 				return true;
 			}
 			p = p->next;
 		}
-		p->next = wp;
+		p->next	 = wp;
 		wp->next = NULL;
 		return true;
 	}
@@ -121,10 +121,10 @@ void print_all_wp() {
 }
 
 bool check_wp() {
-	WP *p = head;
-	bool b = true;
+	WP *  p	      = head;
+	bool  b	      = true;
 	bool *success = &b;
-	int flag = 1;
+	int   flag    = 1;
 	while (p != NULL) {
 		int nv = expr(p->expr, success);
 		if (nv != p->val) {
@@ -140,5 +140,3 @@ bool check_wp() {
 	else
 		return true;
 }
-
-/* TODO: Implement the functionality of watchpoint */

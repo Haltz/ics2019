@@ -14,22 +14,22 @@ enum { EXPR_INVAL, EXPR_VAL, EXPR_PAREN_MISMATCH };
 
 static struct rule {
 	char *regex;
-	int token_type;
+	int   token_type;
 } rules[] = {
-	{ " +", TK_NOTYPE }, // spaces
-	{ "\\(", '(' }, // left parenthesis
-	{ "\\)", ')' }, // right parenthesis
-	{ "\\+", '+' }, // plus
-	{ "-", '-' }, // minus
-	{ "\\*", '*' }, // multiply
-	{ "/", '/' }, // divide
-	{ "==", TK_EQ }, // equal
-	{ "!=", TK_INEQ }, // inequal
+	{ " +", TK_NOTYPE },		       // spaces
+	{ "\\(", '(' },			       // left parenthesis
+	{ "\\)", ')' },			       // right parenthesis
+	{ "\\+", '+' },			       // plus
+	{ "-", '-' },			       // minus
+	{ "\\*", '*' },			       // multiply
+	{ "/", '/' },			       // divide
+	{ "==", TK_EQ },		       // equal
+	{ "!=", TK_INEQ },		       // inequal
 	{ "\\b0[xX][0-9a-fA-F]+\\b", TK_HEX }, // hexnumber
-	{ "[0-9]+", TK_FIG }, //figures
-	{ "&&", TK_AND }, // and
-	{ "<=", TK_SHFT }, //shift
-	{ "\\$[a-zA-Z_]+", TK_REG } //register
+	{ "[0-9]+", TK_FIG },		       //figures
+	{ "&&", TK_AND },		       // and
+	{ "<=", TK_SHFT },		       //shift
+	{ "\\$[a-zA-Z_]+", TK_REG }	       //register
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
@@ -40,9 +40,9 @@ static regex_t re[NR_REGEX] = {};
  * Therefore we compile them only once before any usage.
  */
 void init_regex() {
-	int i;
+	int  i;
 	char error_msg[128];
-	int ret;
+	int  ret;
 
 	for (i = 0; i < NR_REGEX; i++) {
 		ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
@@ -54,17 +54,17 @@ void init_regex() {
 }
 
 typedef struct token {
-	int type;
+	int  type;
 	char str[TOKEN_LEN];
 } Token;
 
 #define NR_TOKENS 64
 static Token tokens[NR_TOKENS] __attribute__((used)) = {};
-static int nr_token __attribute__((used)) = 0;
+static int   nr_token __attribute__((used))	     = 0;
 
 static bool make_token(char *e) {
-	int position = 0;
-	int i;
+	int	   position = 0;
+	int	   i;
 	regmatch_t pmatch;
 
 	nr_token = 0;
@@ -74,15 +74,11 @@ static bool make_token(char *e) {
 		for (i = 0; i < NR_REGEX; i++) {
 			if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
 				char *substr_start = e + position;
-				int substr_len = pmatch.rm_eo;
+				int   substr_len   = pmatch.rm_eo;
 
 				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 
-				/* TODO: Now a new token is recognized with rules[i]. Add codes
-         * to record the token in the array `tokens'. For certain types
-         * of tokens, some extra actions should be performed.
-         */
 				if (substr_len > TOKEN_LEN) {
 					printf("Err: token length overflow.\n");
 					return false;
@@ -116,7 +112,7 @@ static bool make_token(char *e) {
 				case TK_FIG:
 				case TK_HEX:
 					tokens[nr_token].type = rules[i].token_type;
-					int l = TOKEN_LEN - 1;
+					int l		      = TOKEN_LEN - 1;
 					if (substr_len > l)
 						assert(0);
 					strncpy(tokens[nr_token].str, substr_start, substr_len);
@@ -172,9 +168,9 @@ int expr_match_parens(int begin_pos, int end_pos) { // examing parentheses
 }
 
 int find_main_op(int begin_pos, int end_pos) {
-	int mul_div[32]; //用来存储*, /的位置，第一个是最靠右的
-	int dual[32]; //用来存储==，!=, <=等的位置
-	int i = 0, j = 0;
+	int  mul_div[32]; //用来存储*, /的位置，第一个是最靠右的
+	int  dual[32];	  //用来存储==，!=, <=等的位置
+	int  i = 0, j = 0;
 	bool flag = false;
 	for (int t = end_pos; t > begin_pos;) {
 		if (tokens[t].type == (int)')') {
@@ -190,7 +186,7 @@ int find_main_op(int begin_pos, int end_pos) {
 			return t;
 		else if (tokens[t].type == (int)'*' || tokens[t].type == (int)'/') {
 			mul_div[i] = t;
-			flag = true;
+			flag	   = true;
 			i += 1;
 		} else if (tokens[t].type == TK_EQ || tokens[t].type == TK_INEQ || tokens[t].type == TK_AND) {
 			dual[j] = t;
@@ -212,13 +208,13 @@ uint32_t eval(int head, int tail) {
 			return number;
 		} else if (tokens[head].type == TK_REG) {
 			char s[4] = "reg";
-			int i = 1, j = 0;
+			int  i = 1, j = 0;
 			while (tokens[head].str[i] != '\0' && s[j] != '\0') {
 				s[j] = tokens[head].str[i];
 				j += 1;
 				i += 1;
 			}
-			bool p = true;
+			bool  p	      = true;
 			bool *success = &p;
 			return isa_reg_str2val(s, success);
 		} else if (tokens[head].type == TK_HEX) {
@@ -231,7 +227,7 @@ uint32_t eval(int head, int tail) {
 	else if (tokens[head].type == DEREF && tail - head == 1) {
 		// deference
 		int add;
-		add = strtol(tokens[tail].str, NULL, 0);
+		add	     = strtol(tokens[tail].str, NULL, 0);
 		vaddr_t data = vaddr_read(add, 32);
 		return data;
 	} else if (tokens[head].type == NEGA && tail - head == 1) {
@@ -241,7 +237,7 @@ uint32_t eval(int head, int tail) {
 		number = -number;
 		return number;
 	} else { //主运算符处理法
-		int op = find_main_op(head, tail);
+		int	 op   = find_main_op(head, tail);
 		uint32_t val1 = eval(head, op - 1);
 		uint32_t val2 = eval(op + 1, tail);
 		switch (tokens[op].type) {
@@ -281,7 +277,6 @@ uint32_t expr(char *e, bool *success) {
 		return 0;
 	}
 
-	/* TODO: Insert codes to evaluate the expression. */
 	int begin_pos = 0, end_pos = nr_token - 1;
 
 	/*check validity of expr*/

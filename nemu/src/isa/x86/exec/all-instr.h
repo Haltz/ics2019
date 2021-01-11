@@ -24,7 +24,7 @@ make_EHelper(pusha);
 make_EHelper(popa);
 
 make_EHelper(sub);
-make_EHelper(add); // un
+make_EHelper(add);
 make_EHelper(mul);
 make_EHelper(imul1);
 make_EHelper(imul2);
@@ -33,11 +33,11 @@ make_EHelper(div);
 make_EHelper(idiv);
 
 make_EHelper(xor);
-make_EHelper(or);  // un
-make_EHelper(adc); //un
-make_EHelper(sbb); // un
+make_EHelper(or);
+make_EHelper(adc);
+make_EHelper(sbb);
 make_EHelper(and);
-make_EHelper(cmp); // un
+make_EHelper(cmp);
 make_EHelper(not );
 make_EHelper(neg);
 
