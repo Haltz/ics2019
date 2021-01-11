@@ -8,6 +8,9 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len);
 size_t fb_write(const void *buf, size_t offset, size_t len);
 size_t fbsync_write(const void *buf, size_t offset, size_t len);
 
+extern size_t ramdisk_read(void *buf, size_t offset, size_t len);
+extern size_t ramdisk_write(const void *buf, size_t offset, size_t len);
+
 typedef struct {
 	char *	name;
 	size_t	size;
