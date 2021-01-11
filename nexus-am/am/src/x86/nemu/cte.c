@@ -10,13 +10,12 @@ void __am_vecnull();
 
 _Context *__am_irq_handle(_Context *c) {
 	_Context *next = c;
-	__am_get_cur_as(c);
-
-	printf("c->irq in _am_irq_handle is %d\n", c->irq);
-
 	if (user_handler) {
 		_Event ev = { 0 };
 		switch (c->irq) {
+		case 0x20:
+			ev.event = _EVENT_IRQ_TIMER;
+			break;
 		case 0x80:
 			ev.event = _EVENT_SYSCALL;
 			break;
@@ -27,13 +26,12 @@ _Context *__am_irq_handle(_Context *c) {
 			ev.event = _EVENT_ERROR;
 			break;
 		}
-
 		next = user_handler(ev, c);
 		if (next == NULL) {
 			next = c;
 		}
 	}
-	__am_switch(next);
+
 	return next;
 }
 
