@@ -27,7 +27,6 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
 		// load type must be PT_LOAD
 		if (program_header[i].p_type == PT_LOAD) {
 			// copy the ramdisk's sengment to the NEMU's memory
-			Log("???");
 			ramdisk_read((void *)program_header[i].p_vaddr, program_header[i].p_offset, program_header[i].p_filesz);
 
 			// assgin the uninitialized data segment to 0
