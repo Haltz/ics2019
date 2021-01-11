@@ -23,7 +23,6 @@ static inline bool map_inside(IOMap *map, paddr_t addr) {
 static inline int find_mapid_by_addr(IOMap *maps, int size, paddr_t addr) {
 	int i;
 	for (i = 0; i < size; i++) {
-		printf("%d\n", map_inside(maps + i, addr) ? 1 : 0);
 		if (map_inside(maps + i, addr)) {
 			difftest_skip_ref();
 			return i;
