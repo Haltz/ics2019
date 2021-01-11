@@ -2,7 +2,7 @@
 #include <amdev.h>
 #include <nemu.h>
 
-static uint32_t st_time;
+static uint32_t time;
 
 size_t __am_timer_read(uintptr_t reg, void *buf, size_t size) {
 	switch (reg) {
@@ -27,5 +27,5 @@ size_t __am_timer_read(uintptr_t reg, void *buf, size_t size) {
 }
 
 void __am_timer_init() {
-	st_time = inl(RTC_ADDR);
+	time = inl(RTC_ADDR);
 }
