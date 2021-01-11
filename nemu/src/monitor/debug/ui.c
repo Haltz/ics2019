@@ -85,6 +85,15 @@ static int cmd_set_watchpoint(char *args) {
 }
 
 static int cmd_del_watchpoint(char *args) {
+	int n;
+
+	sscanf(args, "%d", &n);
+
+	if (free_wp(n)) {
+		printf("Watchpoint deleted.\n");
+		return 1;
+	}
+
 	return 0;
 }
 
