@@ -26,7 +26,20 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-	raise_intr(id_dest->val, decinfo.seq_pc);
+	switch (decinfo.opcode) {
+	case 0xcc:
+		raise_intr((uint32_t)0x3, decinfo.seq_pc);
+		break;
+	case 0xcd:
+		raise_intr(id_dest->val, decinfo.seq_pc);
+		break;
+	case 0xce:
+		raise_intr((uint32_t)0x4, decinfo.seq_pc);
+		break;
+	default:
+		raise_intr(id_dest->val, decinfo.seq_pc);
+		break;
+	}
 
 	print_asm("int %s", id_dest->str);
 
