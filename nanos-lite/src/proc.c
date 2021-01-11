@@ -7,27 +7,28 @@ static PCB pcb_boot = {};
 PCB *current = NULL;
 
 void switch_boot_pcb() {
-  current = &pcb_boot;
+	current = &pcb_boot;
 }
 
 void hello_fun(void *arg) {
-  int j = 1;
-  while (1) {
-    Log("Hello World from Nanos-lite for the %dth time!", j);
-    j ++;
-    _yield();
-  }
+	int j = 1;
+	while (1) {
+		Log("Hello World from Nanos-lite for the %dth time!", j);
+		j++;
+		_yield();
+	}
 }
 
 void init_proc() {
-  switch_boot_pcb();
+	switch_boot_pcb();
 
-  Log("Initializing processes...");
+	Log("Initializing processes...");
 
-  // load program here
+	// load program here
 
+	naive_uload(NULL, "/bin/init");
 }
 
-_Context* schedule(_Context *prev) {
-  return NULL;
+_Context *schedule(_Context *prev) {
+	return NULL;
 }
