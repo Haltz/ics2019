@@ -78,7 +78,7 @@ make_group(gp1, EXW(add, 1), EXW(or, 1), EX(adc), EX(sbb), EXW(and, 1), EXW(sub,
 		/* 0x98 */ EX(cwtl), EX(cltd), EMPTY, EMPTY,
 		/* 0x9c */ EMPTY, EMPTY, EMPTY, EMPTY,
 		/* 0xa0 */ IDEXW(O2a, mov, 1), IDEX(O2a, mov), IDEXW(a2O, mov, 1), IDEX(a2O, mov),
-		/* 0xa4 */ EMPTY, EMPTY, EMPTY, EMPTY,
+		/* 0xa4 */ EX(movsb), EX(movsw), EMPTY, EMPTY,
 		/* 0xa8 */ IDEXW(I2a, test, 1), IDEX(I2a, test), EMPTY, EMPTY,
 		/* 0xac */ EMPTY, EMPTY, EMPTY, IDEX(E2G, imul2),
 		/* 0xb0 */ IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1), IDEXW(mov_I2r, mov, 1),
@@ -172,14 +172,14 @@ make_group(gp1, EXW(add, 1), EXW(or, 1), EX(adc), EX(sbb), EXW(and, 1), EXW(sub,
 
 static make_EHelper(2byte_esc) {
 	uint32_t opcode = instr_fetch(pc, 1) | 0x100;
-	decinfo.opcode = opcode;
+	decinfo.opcode	= opcode;
 	set_width(opcode_table[opcode].width);
 	idex(pc, &opcode_table[opcode]);
 }
 
 void isa_exec(vaddr_t *pc) {
 	uint32_t opcode = instr_fetch(pc, 1);
-	decinfo.opcode = opcode;
+	decinfo.opcode	= opcode;
 	set_width(opcode_table[opcode].width);
 	idex(pc, &opcode_table[opcode]);
 }

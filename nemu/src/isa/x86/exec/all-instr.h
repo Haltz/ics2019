@@ -33,7 +33,7 @@ make_EHelper(div);
 make_EHelper(idiv);
 
 make_EHelper(xor);
-make_EHelper(or); // un
+make_EHelper(or);  // un
 make_EHelper(adc); //un
 make_EHelper(sbb); // un
 make_EHelper(and);
@@ -65,3 +65,6 @@ make_EHelper(shr);
 make_EHelper(lidt);
 make_EHelper(cwtl);
 make_EHelper(cltd);
+
+make_EHelper(movsb);
+make_EHelper(movsw);
