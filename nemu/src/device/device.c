@@ -84,7 +84,6 @@ void init_device() {
 #else
 
 void init_device() {
-	printf("1231221212\n");
 }
 
 #endif /* HAS_IOE */
