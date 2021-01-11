@@ -18,6 +18,9 @@ typedef struct {
 
 static inline bool map_inside(IOMap *map, paddr_t addr) {
 	printf("%d %d %d\n", map->low, map->high, addr);
+	if (addr >= map->low && addr <= map->high) {
+		printf("good\n");
+	}
 	return (addr >= map->low && addr <= map->high);
 }
 
