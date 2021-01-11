@@ -43,6 +43,47 @@ void init_fs() {
 	file_table[FD_FB].size = (screen_width() * screen_height()) << 2;
 }
 
+int fs_open(const char *pathname, int flags, int mode) {
+	assert(pathname != NULL);
+
+	for (int fd = 0; fd < NR_FILES; fd++) {
+		if (strcmp(file_table[fd].name, pathname) == 0) {
+			file_table[fd].open_offset = 0;
+			return fd;
+		}
+	}
+
+	panic("File Not Found! Check if you input right filename\n");
+	return -1;
+}
+
+int fs_close(int fd) {
+	file_table[fd].open_offset = 0;
+	return 0;
+}
+
+__ssize_t fs_read(int fd, void *buf, size_t len) { //返回值类型？
+	__ssize_t ret = 0;
+	switch (fd) {
+	case FD_STDIN:
+	case FD_STDOUT:
+	case FD_STDERR:
+		break;
+
+	default:
+		if (file_table[fd].open_offset >= file_table[fd].size)
+			return ret;
+		if (file_table[fd].open_offset + len > file_table[fd].size)
+			len = file_table[fd].size - file_table[fd].open_offset;
+		ret = ramdisk_read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, len);
+		file_table[fd].open_offset += ret;
+		break;
+	}
+
+	Log("Successfully read!!!\n");
+	return ret;
+}
+
 __ssize_t fs_write(int fd, const void *buf, size_t len) {
 	__ssize_t ret = 0;
 	switch (fd) {
@@ -62,18 +103,4 @@ __ssize_t fs_write(int fd, const void *buf, size_t len) {
 		break;
 	}
 	return ret;
-}
-
-int fs_open(const char *pathname, int flags, int mode) {
-	assert(pathname != NULL);
-
-	for (int fd = 0; fd < NR_FILES; fd++) {
-		if (strcmp(file_table[fd].name, pathname) == 0) {
-			file_table[fd].open_offset = 0;
-			return fd;
-		}
-	}
-
-	panic("File Not Found! Check if you input right filename\n");
-	return -1;
 }
