@@ -2,7 +2,6 @@
 #include <amdev.h>
 #include <nemu.h>
 
-/* PA2.3 */
 #define W 400
 #define H 300
 
@@ -10,8 +9,8 @@ size_t __am_video_read(uintptr_t reg, void *buf, size_t size) {
 	switch (reg) {
 	case _DEVREG_VIDEO_INFO: {
 		_DEV_VIDEO_INFO_t *info = (_DEV_VIDEO_INFO_t *)buf;
-		info->width		= 0;
-		info->height		= 0;
+		info->width		= W;
+		info->height		= H;
 		return sizeof(_DEV_VIDEO_INFO_t);
 	}
 	}
