@@ -24,12 +24,13 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 		key ^= KEYDOWN_MASK;
 		down = true;
 	}
+
 	if (key != _KEY_NONE) {
-		sprintf(buf, "%s %s\n", down ? "kd" : "ku", keyname[key]);
+		sprintf(buf, "%s %s %s\n", "mykey", down ? "kd" : "ku", keyname[key]);
 
 	} else {
 		int time = uptime();
-		sprintf(buf, "t %d\n", time);
+		sprintf(buf, "%s t %d\n", "none", time);
 	}
 	return strlen(buf);
 }
