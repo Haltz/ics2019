@@ -10,31 +10,30 @@ void init_proc(void);
 extern const char logo[];
 
 int main() {
-  printf("%s", logo);
-  Log("'Hello World!' from Nanos-lite");
-  Log("Build time: %s, %s", __TIME__, __DATE__);
+	printf("%s", logo);
+	Log("'Hello World!' from Nanos-lite");
+	Log("Build time: %s, %s", __TIME__, __DATE__);
 
 #ifdef HAS_VME
-  init_mm();
+	init_mm();
 #endif
+	init_device();
 
-  init_ramdisk();
-
-  init_device();
+	init_ramdisk();
 
 #ifdef HAS_CTE
-  init_irq();
+	init_irq();
 #endif
 
-  init_fs();
+	init_fs();
 
-  init_proc();
+	init_proc();
 
-  Log("Finish initialization");
+	Log("Finish initialization");
 
 #ifdef HAS_CTE
-  _yield();
+	_yield();
 #endif
 
-  panic("Should not reach here");
+	panic("Should not reach here");
 }
