@@ -10,11 +10,9 @@ _Context *do_syscall(_Context *c) {
 	a[3]	= c->GPR4;
 	int res = -1;
 
-	Log("%d\n", a[0]);
-
 	switch (a[0]) {
 	case SYS_exit:
-		_halt(a[1]);
+		naive_uload(NULL, "/bin/init");
 		break;
 
 	case SYS_yield:
