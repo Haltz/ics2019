@@ -11,26 +11,30 @@
 #endif
 
 static uintptr_t loader(PCB *pcb, const char *filename) {
-	Elf_Ehdr elfheader;
-	Elf_Phdr programheader;
-	int	 fd = fs_open(filename, 0, 0);
-	assert(fd != -1);
-	fs_read(fd, &elfheader, sizeof(Elf_Ehdr));
-	fs_lseek(fd, elfheader.e_phoff, SEEK_SET);
-	size_t open_offset;
+	Elf_Ehdr elf_header;
+	// READ ELF HEADER
+	ramdisk_read((void *)&elf_header, 0, sizeof(Elf_Ehdr));
+	// Log("???");
 
-	for (uint16_t i = 0; i < elfheader.e_phnum; i++) {
-		fs_read(fd, &programheader, sizeof(Elf_Phdr));
-		open_offset = fs_open_offset(fd);
-		if (programheader.p_type == PT_LOAD) {
-			fs_lseek(fd, programheader.p_offset, SEEK_SET);
-			fs_read(fd, (void *)programheader.p_vaddr, programheader.p_filesz);
-			memset((void *)(programheader.p_vaddr + programheader.p_filesz), 0, (programheader.p_memsz - programheader.p_filesz));
+	// define porgram header array to read program headers
+	Elf_Phdr program_header[128];
+	ramdisk_read((void *)program_header, elf_header.e_phoff, elf_header.e_phentsize * elf_header.e_phnum);
+	// Log("???");
+
+	// using the program header to load segment
+	// such as data segment
+	for (int i = 0; i < elf_header.e_phnum; i++) {
+		// load type must be PT_LOAD
+		if (program_header[i].p_type == PT_LOAD) {
+			// copy the ramdisk's sengment to the NEMU's memory
+			Log("???");
+			ramdisk_read((void *)program_header[i].p_vaddr, program_header[i].p_offset, program_header[i].p_filesz);
+
+			// assgin the uninitialized data segment to 0
+			memset((void *)(program_header[i].p_vaddr + program_header[i].p_filesz), 0, program_header[i].p_memsz - program_header[i].p_filesz);
 		}
-		fs_lseek(fd, open_offset, SEEK_SET);
 	}
-	fs_close(fd);
-	return elfheader.e_entry;
+	return elf_header.e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
