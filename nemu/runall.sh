@@ -1,7 +1,9 @@
 #!/bin/bash
 
-ISA=${1#*ISA=}
+ISA=x86
 nemu=build/$ISA-nemu
+
+echo $ISA
 
 echo "compiling NEMU..."
 if make ISA=$ISA; then
