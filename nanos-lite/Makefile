@@ -2,6 +2,7 @@ NAME = nanos-lite
 SRCS = $(shell find -L ./src/ -name "*.c" -o -name "*.cpp" -o -name "*.S")
 LIBS = klib
 PREBUILD = update
+ARCH = x86-nemu
 
 include $(AM_HOME)/Makefile.app
 
