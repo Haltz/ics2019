@@ -18,7 +18,6 @@ void add_pio_map(char *name, ioaddr_t addr, uint8_t *space, int len, io_callback
 }
 
 static inline uint32_t pio_read_common(ioaddr_t addr, int len) {
-	printf("%s\n", "123");
 	assert(addr + len - 1 < PORT_IO_SPACE_MAX);
 	int mapid = find_mapid_by_addr(maps, nr_map, addr);
 	assert(mapid != -1);
