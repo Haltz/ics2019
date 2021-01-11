@@ -63,3 +63,17 @@ __ssize_t fs_write(int fd, const void *buf, size_t len) {
 	}
 	return ret;
 }
+
+int fs_open(const char *pathname, int flags, int mode) {
+	assert(pathname != NULL);
+
+	for (int fd = 0; fd < NR_FILES; fd++) {
+		if (strcmp(file_table[fd].name, pathname) == 0) {
+			file_table[fd].open_offset = 0;
+			return fd;
+		}
+	}
+
+	panic("File Not Found! Check if you input right filename\n");
+	return -1;
+}
