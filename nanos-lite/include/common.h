@@ -9,13 +9,6 @@
 #include <klib.h>
 #include "debug.h"
 
-typedef uint32_t rtlreg_t;
-
-typedef uint32_t paddr_t;
-typedef uint32_t vaddr_t;
-
-typedef uint16_t ioaddr_t;
-
 typedef char bool;
 #define true 1
 #define false 0
