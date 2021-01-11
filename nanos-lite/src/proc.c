@@ -3,8 +3,8 @@
 #define MAX_NR_PROC 4
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
-static PCB pcb_boot = {};
-PCB *current = NULL;
+static PCB pcb_boot				  = {};
+PCB *	   current				  = NULL;
 
 void switch_boot_pcb() {
 	current = &pcb_boot;
@@ -26,7 +26,7 @@ void init_proc() {
 
 	// load program here
 
-	naive_uload(NULL, "/bin/init");
+	naive_uload(NULL, "/bin/hello");
 }
 
 _Context *schedule(_Context *prev) {
