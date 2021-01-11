@@ -52,24 +52,7 @@ __ssize_t fs_write(int fd, const void *buf, size_t len) {
 	case FD_STDERR:
 		ret = file_table[fd].write(buf, 0, len);
 		break;
-	case FD_FB:
-		if (file_table[fd].open_offset >= file_table[fd].size)
-			return ret;
-		if (file_table[fd].open_offset + len > file_table[fd].size)
-			len = file_table[fd].size - file_table[fd].open_offset;
-		ret = file_table[fd].write(buf, file_table[fd].open_offset, len);
-		file_table[fd].open_offset += ret;
-		break;
-	case FD_EVENTS:
-	case FD_FBSYNC:
-		ret = file_table[fd].write(buf, 0, len);
-		break;
-	case FD_DISPINFO:
-		break;
-	case FD_TTY:
-		ret = file_table[fd].write(buf, file_table[fd].open_offset, len);
-		file_table[fd].open_offset += ret;
-		break;
+
 	default:
 		if (file_table[fd].open_offset >= file_table[fd].size)
 			return ret;
