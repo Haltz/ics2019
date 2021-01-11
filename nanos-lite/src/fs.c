@@ -37,6 +37,18 @@ void init_fs() {
 	file_table[FD_FB].size = screen_width() * screen_height() * 4;
 }
 
+int fs_open(const char *pathname, int flags, int mode) {
+	for (int i = 0; i < NR_FILES; i++) {
+		if (strcmp(file_table[i].name, pathname) == 0) {
+			file_table[i].open_offset = 0;
+			return i;
+		}
+	}
+	printf("file %s does not exist!", pathname);
+	assert(0);
+	return -1;
+}
+
 size_t fs_read(int fd, void *buf, size_t len) {
 	assert(fd >= 0 && fd < NR_FILES);
 
