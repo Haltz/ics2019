@@ -113,8 +113,6 @@ int init_monitor(int argc, char *argv[]) {
 	/* Initialize devices. */
 	init_device();
 
-	printf("123\n");
-
 	/* Initialize differential testing. */
 	init_difftest(diff_so_file, img_size);
 
