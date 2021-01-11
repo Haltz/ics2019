@@ -20,7 +20,7 @@ static make_EHelper(2byte_esc);
 make_group(gp1, EXW(add, 1), EXW(or, 1), EX(adc), EX(sbb), EXW(and, 1), EXW(sub, 1), EXW(xor, 1), EXW(cmp, 1))
 
 	/* 0xc0, 0xc1, 0xd0, 0xd1, 0xd2, 0xd3 */
-	make_group(gp2, EMPTY, EMPTY, EMPTY, EMPTY, EXW(shl, 1), EX(shr), EMPTY, EXW(sar, 1))
+	make_group(gp2, EX(rol), EMPTY, EMPTY, EMPTY, EXW(shl, 1), EX(shr), EMPTY, EXW(sar, 1))
 
 	/* 0xf6, 0xf7 */
 	make_group(gp3, IDEX(test_I, test), EMPTY, EX(not ), EX(neg), EX(mul), EX(imul1), EX(div), EX(idiv))

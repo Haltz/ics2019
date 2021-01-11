@@ -68,3 +68,5 @@ make_EHelper(cltd);
 
 make_EHelper(movsb);
 make_EHelper(movsw);
+
+make_EHelper(rol);
