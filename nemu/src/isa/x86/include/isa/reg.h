@@ -35,6 +35,7 @@ typedef struct {
 		};
 	};
 	vaddr_t pc;
+	// pa3 context
 	vaddr_t cs;
 
 	union {
