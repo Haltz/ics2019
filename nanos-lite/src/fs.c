@@ -34,6 +34,7 @@ static Finfo file_table[] __attribute__((used)) = {
 	{ "stdin", 0, 0, 0, invalid_read, invalid_write },
 	{ "stdout", 0, 0, 0, invalid_read, serial_write },
 	{ "stderr", 0, 0, 0, invalid_read, serial_write },
+#include "files.h"
 };
 
 #define NR_FILES (sizeof(file_table) / sizeof(file_table[0]))
@@ -46,9 +47,6 @@ void init_fs() {
 int fs_open(const char *pathname, int flags, int mode) {
 	assert(pathname != NULL);
 
-	for (int fd = 0; fd < NR_FILES; fd++) {
-		printf("%s\n", file_table[fd].name);
-	}
 	for (int fd = 0; fd < NR_FILES; fd++) {
 		if (strcmp(file_table[fd].name, pathname) == 0) {
 			file_table[fd].open_offset = 0;
