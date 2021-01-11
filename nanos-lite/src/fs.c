@@ -52,7 +52,6 @@ __ssize_t fs_write(int fd, const void *buf, size_t len) {
 	case FD_STDERR:
 		ret = file_table[fd].write(buf, 0, len);
 		break;
-
 	default:
 		if (file_table[fd].open_offset >= file_table[fd].size)
 			return ret;
