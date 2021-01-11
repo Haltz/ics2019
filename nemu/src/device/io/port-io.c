@@ -48,6 +48,5 @@ void pio_write_w(ioaddr_t addr, uint32_t data) {
 	pio_write_common(addr, data, 2);
 }
 void pio_write_b(ioaddr_t addr, uint32_t data) {
-	dump_stack();
 	pio_write_common(addr, data, 1);
 }
