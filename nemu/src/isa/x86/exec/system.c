@@ -69,9 +69,9 @@ make_EHelper(iret) {
 uint32_t pio_read_l(ioaddr_t);
 uint32_t pio_read_w(ioaddr_t);
 uint32_t pio_read_b(ioaddr_t);
-void pio_write_l(ioaddr_t, uint32_t);
-void pio_write_w(ioaddr_t, uint32_t);
-void pio_write_b(ioaddr_t, uint32_t);
+void	 pio_write_l(ioaddr_t, uint32_t);
+void	 pio_write_w(ioaddr_t, uint32_t);
+void	 pio_write_b(ioaddr_t, uint32_t);
 
 make_EHelper(in) {
 	switch (id_src->width) {
@@ -93,6 +93,7 @@ make_EHelper(in) {
 }
 
 make_EHelper(out) {
+	printf("out\n");
 	switch (id_src->width) {
 	case 1:
 		pio_write_b(id_dest->val, id_src->val);
