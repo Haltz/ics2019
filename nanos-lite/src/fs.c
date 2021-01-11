@@ -92,3 +92,27 @@ size_t fs_write(int fd, const void *buf, size_t len) {
 	file_table[fd].open_offset += length;
 	return length;
 }
+
+size_t fs_lseek(int fd, size_t offset, int whence) {
+	assert(fd >= 0 && fd < NR_FILES);
+	size_t open_offset = file_table[fd].open_offset;
+	switch (whence) {
+	case SEEK_SET:
+		open_offset = offset;
+		break;
+	case SEEK_CUR:
+		open_offset += offset;
+		break;
+	case SEEK_END:
+		open_offset = file_table[fd].size + offset;
+		break;
+	default:
+		panic("There is no such whence");
+	}
+	file_table[fd].open_offset = open_offset;
+	return open_offset;
+}
+
+size_t fs_open_offset(int fd) {
+	return file_table[fd].open_offset;
+}
