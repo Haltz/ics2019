@@ -36,3 +36,22 @@ void init_fs() {
 	// initialize the size of /dev/fb
 	file_table[FD_FB].size = screen_width() * screen_height() * 4;
 }
+
+size_t fs_read(int fd, void *buf, size_t len) {
+	assert(fd >= 0 && fd < NR_FILES);
+
+	int r_len = len;
+	if (file_table[fd].size > 0 && file_table[fd].open_offset + len > file_table[fd].size) {
+		r_len = file_table[fd].size - file_table[fd].open_offset;
+	}
+	assert(r_len >= 0);
+
+	size_t length = 0;
+	if (file_table[fd].read == NULL) {
+		length = ramdisk_read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, r_len);
+	} else {
+		length = file_table[fd].read(buf, file_table[fd].disk_offset + file_table[fd].open_offset, r_len);
+	}
+	file_table[fd].open_offset += length;
+	return length;
+}
