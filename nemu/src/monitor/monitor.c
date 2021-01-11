@@ -101,8 +101,6 @@ int init_monitor(int argc, char *argv[]) {
 	/* Load the image to memory. */
 	long img_size = load_img();
 
-	printf("123\n");
-
 	/* Perform ISA dependent initialization. */
 	init_isa();
 
@@ -114,6 +112,8 @@ int init_monitor(int argc, char *argv[]) {
 
 	/* Initialize devices. */
 	init_device();
+
+	printf("123\n");
 
 	/* Initialize differential testing. */
 	init_difftest(diff_so_file, img_size);
