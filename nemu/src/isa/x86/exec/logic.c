@@ -29,7 +29,6 @@ make_EHelper(xor) {
 	operand_write(id_dest, &s0);
 	rtl_update_ZFSF(&s0, id_dest->width);
 
-	// CF = 0, OF = 0
 	s1 = 0;
 	rtl_set_CF(&s1);
 	rtl_set_OF(&s1);
