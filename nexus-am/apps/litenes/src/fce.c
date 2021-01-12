@@ -152,7 +152,6 @@ int main(const char *rom_name) {
 	struct rom *rom = &roms[0];
 	for (int i = 1; i < nroms; i++) {
 		struct rom *cur = &roms[i];
-		printf("2: %s %s\n", cur->name, rom_name);
 		if (strcmp(cur->name, rom_name) == 0) {
 			rom = cur;
 		}
