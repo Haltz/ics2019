@@ -159,7 +159,6 @@ int main(const char *rom_name) {
 	}
 
 	printf("LiteNES ROM: %s\n", rom->name);
-	printf("123\n");
 
 	fce_load_rom(rom->body);
 	fce_init();
