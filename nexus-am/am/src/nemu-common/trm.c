@@ -25,9 +25,8 @@ void _halt(int code) {
 void _trm_init() {
 	extern const char _start;
 	const char *	  mainargs = &_start - 0x100000;
-	printf("1\n");
+	printf("mainargs: %s\n", mainargs);
 	int ret = main(mainargs);
-	printf("3\n");
 
 	_halt(ret);
 }
