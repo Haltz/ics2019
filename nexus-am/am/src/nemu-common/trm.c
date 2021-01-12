@@ -27,5 +27,7 @@ void _trm_init() {
 	const char *	  mainargs = &_start - 0x100000;
 	printf("1\n");
 	int ret = main(mainargs);
+	printf("3\n");
+
 	_halt(ret);
 }
