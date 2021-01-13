@@ -56,7 +56,6 @@ int fs_open(const char *pathname, int flags, int mode) {
 		}
 	}
 
-	panic("File Not Found! Check if you input right filename\n");
 	return -1;
 }
 
