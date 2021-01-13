@@ -148,12 +148,16 @@ void fce_update_screen() {
 
 int main(const char *rom_name) {
 	_ioe_init();
+	char *name = rom_name;
+	if (!rom_name) {
+		name = "";
+	}
 
 	struct rom *rom = &roms[0];
 	for (int i = 1; i < nroms; i++) {
 		struct rom *cur = &roms[i];
 		// if (strcmp(cur->name, "bomberman") == 0) {
-		if (strcmp(cur->name, rom_name || "NULL") == 0) {
+		if (strcmp(cur->name, name) == 0) {
 			rom = cur;
 		}
 	}
