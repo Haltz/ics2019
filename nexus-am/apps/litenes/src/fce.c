@@ -153,6 +153,7 @@ int main(const char *rom_name) {
 	if (!rom_name) {
 		name = tname;
 	}
+	printf("%s\n", name);
 
 	struct rom *rom = &roms[0];
 	for (int i = 1; i < nroms; i++) {
