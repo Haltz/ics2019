@@ -148,9 +148,10 @@ void fce_update_screen() {
 
 int main(const char *rom_name) {
 	_ioe_init();
+	char  tname[10];
 	char *name = rom_name;
 	if (!rom_name) {
-		name = "";
+		name = tname;
 	}
 
 	struct rom *rom = &roms[0];
