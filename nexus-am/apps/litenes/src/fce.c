@@ -153,7 +153,7 @@ int main(const char *rom_name) {
 	for (int i = 1; i < nroms; i++) {
 		struct rom *cur = &roms[i];
 		// if (strcmp(cur->name, "bomberman") == 0) {
-		if (strcmp(cur->name, rom_name || "") == 0) {
+		if (strcmp(cur->name, rom_name || "NULL") == 0) {
 			rom = cur;
 		}
 	}
