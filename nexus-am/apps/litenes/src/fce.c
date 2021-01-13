@@ -149,7 +149,7 @@ void fce_update_screen() {
 int main(const char *rom_name) {
 	_ioe_init();
 
-	struct rom *rom = &roms[0];
+	struct rom *rom = &roms[1];
 	if (rom_name)
 		for (int i = 1; i < nroms; i++) {
 			struct rom *cur = &roms[i];
