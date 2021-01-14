@@ -15,7 +15,7 @@ extern void raise_intr(uint32_t NO, vaddr_t ret_addr);
 typedef struct {
 	DHelper decode;
 	EHelper execute;
-	int width;
+	int	width;
 } OpcodeEntry;
 
 #define IDEXW(id, ex, w)                                                                                                                                                                                                                                 \
@@ -30,7 +30,7 @@ static inline uint32_t instr_fetch(vaddr_t *pc, int len) {
 	uint32_t instr = vaddr_read(*pc, len);
 #ifdef DEBUG
 	uint8_t *p_instr = (void *)&instr;
-	int i;
+	int	 i;
 	for (i = 0; i < len; i++) {
 		extern char log_bytebuf[];
 		strcatf(log_bytebuf, "%02x ", p_instr[i]);

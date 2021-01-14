@@ -7,7 +7,7 @@ static _Context *do_event(_Event e, _Context *c) {
 	switch (e.event) {
 		//case _EVENT_YIELD: printf("This is a yield event.\n"); break;
 	case _EVENT_YIELD:
-		return schedule(c);
+		Log("yield event");
 		break;
 	case _EVENT_SYSCALL:
 		do_syscall(c);
@@ -16,7 +16,6 @@ static _Context *do_event(_Event e, _Context *c) {
 		panic("Unhandled event ID = %d", e.event);
 	}
 
-	return NULL;
 	return NULL;
 }
 

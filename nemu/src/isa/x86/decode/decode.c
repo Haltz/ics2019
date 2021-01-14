@@ -9,7 +9,7 @@
 static inline make_DopHelper(I) {
 	/* pc here is pointing to the immediate */
 	op->type = OP_TYPE_IMM;
-	op->imm = instr_fetch(pc, op->width);
+	op->imm	 = instr_fetch(pc, op->width);
 	rtl_li(&op->val, op->imm);
 
 	print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->imm);
@@ -49,7 +49,7 @@ static inline make_DopHelper(SI) {
 /* AL/eAX */
 static inline make_DopHelper(a) {
 	op->type = OP_TYPE_REG;
-	op->reg = R_EAX;
+	op->reg	 = R_EAX;
 	if (load_val) {
 		rtl_lr(&op->val, R_EAX, op->width);
 	}
@@ -63,7 +63,7 @@ static inline make_DopHelper(a) {
  */
 static inline make_DopHelper(r) {
 	op->type = OP_TYPE_REG;
-	op->reg = decinfo.opcode & 0x7;
+	op->reg	 = decinfo.opcode & 0x7;
 	if (load_val) {
 		rtl_lr(&op->val, op->reg, op->width);
 	}
@@ -213,7 +213,7 @@ make_DHelper(SI_E2G) {
 make_DHelper(gp2_1_E) {
 	decode_op_rm(pc, id_dest, true, NULL, false);
 	id_src->type = OP_TYPE_IMM;
-	id_src->imm = 1;
+	id_src->imm  = 1;
 	rtl_li(&id_src->val, 1);
 
 	print_Dop(id_src->str, OP_STR_SIZE, "$1");
@@ -222,7 +222,7 @@ make_DHelper(gp2_1_E) {
 make_DHelper(gp2_cl2E) {
 	decode_op_rm(pc, id_dest, true, NULL, false);
 	id_src->type = OP_TYPE_REG;
-	id_src->reg = R_CL;
+	id_src->reg  = R_CL;
 	rtl_lr(&id_src->val, R_CL, 1);
 
 	print_Dop(id_src->str, OP_STR_SIZE, "%%cl");
@@ -247,7 +247,7 @@ make_DHelper(Ib_G2E) {
 make_DHelper(cl_G2E) {
 	decode_op_rm(pc, id_dest, true, id_src2, true);
 	id_src->type = OP_TYPE_REG;
-	id_src->reg = R_CL;
+	id_src->reg  = R_CL;
 	rtl_lr(&id_src->val, R_CL, 1);
 
 	print_Dop(id_src->str, OP_STR_SIZE, "%%cl");
@@ -281,7 +281,7 @@ make_DHelper(in_I2a) {
 
 make_DHelper(in_dx2a) {
 	id_src->type = OP_TYPE_REG;
-	id_src->reg = R_DX;
+	id_src->reg  = R_DX;
 	rtl_lr(&id_src->val, R_DX, 2);
 
 	print_Dop(id_src->str, OP_STR_SIZE, "(%%dx)");
@@ -299,7 +299,7 @@ make_DHelper(out_a2dx) {
 	decode_op_a(pc, id_src, true);
 
 	id_dest->type = OP_TYPE_REG;
-	id_dest->reg = R_DX;
+	id_dest->reg  = R_DX;
 	rtl_lr(&id_dest->val, R_DX, 2);
 
 	print_Dop(id_dest->str, OP_STR_SIZE, "(%%dx)");
